@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import * as contentful from 'contentful'
 
 const client = contentful.createClient({
-  space: '2qe6xgfwyxeo',
-  accessToken: '1QCB1pBKDFHSOQCxVAscDr5FxGa1JqP4eNXdjrcf0WI'
+  space: process.env.REACT_APP_SPACE_ID,
+  accessToken: process.env.REACT_APP_API_KEY
 })
+
+console.log(process.env.REACT_APP_API_KEY)
 
 function App() {
   const [content, setContent] = useState([])
