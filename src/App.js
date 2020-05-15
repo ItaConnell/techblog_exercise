@@ -14,6 +14,7 @@ function App() {
   useEffect(() => {
     client.getEntries().then(entries => {
       console.log(entries)
+      setContent(entries.items)
 
     })
   }, []
@@ -24,8 +25,8 @@ function App() {
       {content.map(entry => {
         return (
           <div className="blogpost">
-            <h2>{entry.fields.title}</h2>
-            <p>{entry.fields.content.content[0].content[0].value}</p>
+            <h2>{entry.fields.commentAuthor}</h2>
+            <p>{entry.fields.commentAuthorEmail}</p>
           </div>
         )
       })}
