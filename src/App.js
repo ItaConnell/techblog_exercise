@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import * as contentful from 'contentful'
+import * as contentful from 'contentful';
+import moment from "moment"
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { Paper } from "@material-ui/core"
 
 const client = contentful.createClient({
   space: process.env.REACT_APP_SPACE_ID,
@@ -9,12 +12,13 @@ const client = contentful.createClient({
 console.log(process.env.REACT_APP_API_KEY)
 
 function App() {
-  const [content, setContent] = useState([])
+  const [content, setContent] = useState([]);
+  const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
     client.getEntries().then(entries => {
-      console.log(entries)
-      setContent(entries.items)
+      console.log(entries.items.filter(item => !!item.fields.isPost))
+      setContent(entries.items.filter(item => !!item.fields.isPost))
 
     })
   }, []
@@ -24,10 +28,17 @@ function App() {
     <>
       {content.map(entry => {
         return (
-          <div className="blogpost">
-            <h2>{entry.fields.commentAuthor}</h2>
-            <p>{entry.fields.commentAuthorEmail}</p>
-          </div>
+          <main>
+            {console.log(entry.fields.headerImage.fields.file.url)}
+            <Paper variant="outlined" style={{ margin: "1%", width: "60%" }}>
+              <div className="blogpost">
+                <img src={`${entry.fields.headerImage.fields.file.url}`} alt="" />
+                <h2>{entry.fields.postTitle}</h2>
+                <p><i>{entry.fields.authors.fields.authorName} on {moment(entry.fields.creationDate).format('MMMM Do YYYY')}</i> </p>
+                {documentToReactComponents(entry.fields.postContent)}
+              </div>
+            </Paper>
+          </main>
         )
       })}
     </>
