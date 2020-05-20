@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import * as contentful from 'contentful';
-import moment from "moment"
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { Paper } from "@material-ui/core"
+import ContentStream from "./components/ContentStream";
+import { Route, Switch, Redirect } from "react-router-dom";
+import Entry from "./components/Entry"
 
 const client = contentful.createClient({
   space: process.env.REACT_APP_SPACE_ID,
@@ -17,31 +17,23 @@ function App() {
 
   useEffect(() => {
     client.getEntries().then(entries => {
-      console.log(entries.items.filter(item => !!item.fields.isPost))
+      setAuthors(entries.items.filter(item => !!item.fields.isAuthor))
       setContent(entries.items.filter(item => !!item.fields.isPost))
+      console.log(entries.items.filter(item => !!item.fields.isPost))
 
     })
   }, []
   )
 
   return (
-    <>
-      {content.map(entry => {
-        return (
-          <main>
-            {console.log(entry.fields.headerImage.fields.file.url)}
-            <Paper variant="outlined" style={{ margin: "1%", width: "60%" }}>
-              <div className="blogpost">
-                <img src={`${entry.fields.headerImage.fields.file.url}`} alt="" />
-                <h2>{entry.fields.postTitle}</h2>
-                <p><i>{entry.fields.authors.fields.authorName} on {moment(entry.fields.creationDate).format('MMMM Do YYYY')}</i> </p>
-                {documentToReactComponents(entry.fields.postContent)}
-              </div>
-            </Paper>
-          </main>
-        )
-      })}
-    </>
+    <main>
+      <Switch>
+        <Route path="/:slug" render={props => <Entry {...props} content={content} />} />
+        <Route exact path="/" render={props => <ContentStream {...props} content={content} authors={authors} />} />
+        <Redirect to="/" />
+      </Switch>
+
+    </main>
   );
 }
 

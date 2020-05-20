@@ -16,12 +16,41 @@ main{
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: url("./img/background.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed; 
+  background-position-y: 250px;
 }
 .blogpost{
-  padding: 5%;
+  padding: 2%;
+  
 
 }
-
 img{
   width: 100%
+}
+.blogpost{
+  display: flex;
+  flex-direction: column
+}
+.articleLink{
+  padding-top: 2%
+}
+.postAuthor{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  
+}
+
+.avatar{
+  margin-right: 1%;
+  
+}
+.postAuthorText{
+  flex-grow: 1;
+}
+.chips{
+  display: flex
 }
